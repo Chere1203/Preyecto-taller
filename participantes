@@ -1,0 +1,28 @@
+#registro de participantes:
+'''
+El siguiente paso del sistema es solicitar la lista de personas que participarán en la sesión.
+Estas personas deben ser registradas una por una, hasta que se complete la lista con los
+nombres completos de todos los participantes.'''
+
+    
+participantes = []
+continua_participante = True
+
+while continua_participante:
+    agregar_participante = input("Desea agregar un nuevo participante (digite: si/no) ")
+    
+    if agregar_participante.lower() == "si":
+        inscribe_participante = input("Ingrese el nombre de la persona: ")
+        participantes.append((inscribe_participante,))
+    elif agregar_participante == 'no':
+            continua_participante= False
+    else: 
+        print ('Porfavor seleccione: si / no: ')
+        continue
+            
+            
+
+
+print("\nReporteLista de participantes:")
+for idx, participante in enumerate(participantes):
+    print(f"{idx+1}. {participante[0]}")

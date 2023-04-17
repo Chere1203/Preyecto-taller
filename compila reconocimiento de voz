@@ -1,0 +1,72 @@
+'''Todos los reconocimientos de texto deben estar asociados a un punto de la agenda y a
+un participante específico de la sesión, y deben registrar automáticamente la hora de
+inicio. Para comenzar, una vez que se haya registrado la agenda y el listado de
+participantes, se debe seleccionar el punto de la agenda que se abordará, utilizando
+un menú desplegable que mostrará los apartados y puntos de la agenda enumerados
+según el orden de inserción. La selección se realiza mediante el índice numérico
+correspondiente.'''
+#asociar los puntos de agenda
+
+
+agenda = []
+continua = True
+
+while continua:
+    agregar_punto = input("¿Desea agregar un punto a la agenda? (digite: si/no) ")
+    if agregar_punto.lower() == "si":
+        titulo_punto= input("Ingrese el titulo de la agenda: ")
+        tipo_punto = input("Presione (p) si es un punto principal o (s) si es secundario: ")
+        if tipo_punto.lower() == "p":
+            agenda.append((titulo_punto, True))
+        else:
+            agenda.append((titulo_punto, False))
+    elif agregar_punto.lower() == 'no':
+        continua= False
+    else:
+        print('Por favor elija si desea ingresar o no algún punto de agenda: ')
+        continue
+    
+ 
+
+print("\nReport:")
+for idx, item in enumerate(agenda):
+    item_type = "Punto Principal" if item[1] else "Subpunto"
+    print(f"{idx+1}. {item[0]} ({item_type})")
+    
+participantes = []
+continua_participante = True
+
+while continua_participante:
+    agregar_participante = input("Desea agregar un nuevo participante (digite: si/no) ")
+    
+    if agregar_participante.lower() == "si":
+        inscribe_participante = input("Ingrese el nombre de la persona: ")
+        participantes.append((inscribe_participante,))
+    elif agregar_participante == 'no':
+            continua_participante= False
+    else: 
+        print ('Porfavor selecciones: si / no: ')
+        continue
+            
+            
+
+
+print("\nReporteLista de participantes:")
+for idx, participante in enumerate(participantes):
+    print(f"{idx+1}. {participante[0]}")
+    
+    
+    
+ import speech_recognition as sr
+
+r = sr.Recognizer() 
+
+with sr.Microphone() as source:
+    print('Speak Anything : ')
+    audio = r.listen(source)
+
+    try:
+        text = r.recognize_google(audio)
+        print('You said: {}'.format(text))
+    except:
+        print('Sorry could not hear')
