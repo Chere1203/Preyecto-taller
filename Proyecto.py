@@ -131,13 +131,13 @@ print('favor elegir del menu correspondiente según se solicita los participante
 print('o puntos de la agenda y procede a inciar el reconocimiento de voz respectivo')
 
 start=True
+guarda_reconocimiento=[]
 while start:
-    guarda_reconocimiento=[]
     desea_iniciar=input('¿Desea iniciar el sistema? (si/no) ')
     if desea_iniciar.lower()=='si':
         punto_hablar=selecciona_punto_agenda(agenda)
         elegido=selecciona_participante(participantes)
-        guarda_reconocimiento.append(print(f"{punto_hablar[0]}" "{elegido}",reconocimiento()))
+        guarda_reconocimiento.append(print(f"{punto_hablar[0]} {elegido}",reconocimiento()))
     elif desea_iniciar.lower()=='no':
         start==False
     
