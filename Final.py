@@ -36,14 +36,15 @@ class ParticipantsWindow(QWidget):
         if selected_item:
             self.participants_list.takeItem(self.participants_list.row(selected_item))
 
+
 class AgendaWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Registro de Agenda')
         self.layout = QVBoxLayout()
 
-        self.apartados_list = QListWidget()
-        self.layout.addWidget(self.apartados_list)
+        self.agenda_text = QTextEdit()
+        self.layout.addWidget(self.agenda_text)
 
         self.apartado_input = QLineEdit()
         self.layout.addWidget(self.apartado_input)
@@ -51,9 +52,6 @@ class AgendaWindow(QWidget):
         self.add_apartado_button = QPushButton('Agregar Apartado')
         self.add_apartado_button.clicked.connect(self.add_apartado)
         self.layout.addWidget(self.add_apartado_button)
-
-        self.puntos_list = QListWidget()
-        self.layout.addWidget(self.puntos_list)
 
         self.punto_input = QLineEdit()
         self.layout.addWidget(self.punto_input)
@@ -72,31 +70,52 @@ class AgendaWindow(QWidget):
 
         self.setLayout(self.layout)
 
+        self.agenda_data = {}
+
     def add_apartado(self):
         apartado = self.apartado_input.text()
         if apartado:
-            self.apartados_list.addItem(apartado)
+            self.agenda_data[apartado] = []
+            self.update_agenda_text()
             self.apartado_input.clear()
 
     def add_punto(self):
-        apartado, ok = QInputDialog.getItem(self, "Seleccionar Apartado", "Apartado:", [self.apartados_list.item(i).text() for i in range(self.apartados_list.count())], editable=False)
+        apartado, ok = QInputDialog.getItem(self, "Seleccionar Apartado", "Apartado:", self.agenda_data.keys(), editable=False)
         if ok and apartado:
             punto = self.punto_input.text()
             if punto:
-                self.puntos_list.addItem(punto)
+                self.agenda_data[apartado].append(punto)
+                self.update_agenda_text()
                 self.punto_input.clear()
 
     def edit_punto(self):
-        selected_item = self.puntos_list.currentItem()
-        if selected_item:
-            nuevo_punto, ok = QInputDialog.getText(self, "Editar Punto", "Nuevo nombre del punto:", text=selected_item.text())
-            if ok and nuevo_punto:
-                selected_item.setText(nuevo_punto)
+        apartado, ok = QInputDialog.getItem(self, "Seleccionar Apartado", "Apartado:", self.agenda_data.keys(), editable=False)
+        if ok and apartado:
+            puntos = self.agenda_data[apartado]
+            punto, ok = QInputDialog.getItem(self, "Seleccionar Punto", "Punto:", puntos, editable=False)
+            if ok and punto:
+                nuevo_punto, ok = QInputDialog.getText(self, "Editar Punto", "Nuevo nombre del punto:", text=punto)
+                if ok and nuevo_punto:
+                    index = puntos.index(punto)
+                    self.agenda_data[apartado][index] = nuevo_punto
+                    self.update_agenda_text()
 
     def remove_punto(self):
-        selected_item = self.puntos_list.currentItem()
-        if selected_item:
-            self.puntos_list.takeItem(self.puntos_list.row(selected_item))
+        apartado, ok = QInputDialog.getItem(self, "Seleccionar Apartado", "Apartado:", self.agenda_data.keys(), editable=False)
+        if ok and apartado:
+            puntos = self.agenda_data[apartado]
+            punto, ok = QInputDialog.getItem(self, "Seleccionar Punto", "Punto:", puntos, editable=False)
+            if ok and punto:
+                index = puntos.index(punto)
+                self.agenda_data[apartado].pop(index)
+                self.update_agenda_text()
+
+    def update_agenda_text(self):
+        self.agenda_text.clear()
+        for apartado, puntos in self.agenda_data.items():
+            self.agenda_text.append(f"{apartado}:")
+            for punto in puntos:
+                self.agenda_text.append(f"  - {punto}")
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -192,7 +211,14 @@ class AudioWindow(QWidget):
                 text += f'Segmento {i}: {segment_text}\n'
 
             self.recognize_result.setText(text)
-
+    def choose_participant_from_agenda(agenda_data):
+        apartados = list(agenda_data.keys())
+        apartado, ok = QInputDialog.getItem(None, "Seleccionar Participante", "Apartado:", apartados, editable=False)
+        if ok and apartado:
+            QMessageBox.information(None, "Participante seleccionado", f"Has seleccionado al participante: {apartado}")
+            return apartado
+        else:
+            return None
 
 app = QApplication([])
 main_window = MainWindow()
