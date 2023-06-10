@@ -1,0 +1,152 @@
+import webview
+import agenda as a
+
+def generar_html_con_funcion_recursiva():
+    html = """<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Función Recursiva</title>
+                <script>
+                    // Clase Participante
+                    class Participante {
+                        constructor(nombre, apellido1, apellido2) {
+                            this.nombre = nombre;
+                            this.apellido1 = apellido1;
+                            this.apellido2 = apellido2;
+                        }
+                    }
+
+                    // Clase Discusion
+                    class Discusion {
+                        constructor(persona, discusion) {
+                            this.persona = persona;
+                            this.discusion = discusion;
+                            this.sig = null;
+                        }
+                    }
+
+                    // Clase Punto
+                    class Punto {
+                        constructor(punto) {
+                            this.punto = punto;
+                            this.discusiones = null;
+                            this.sig = null;
+                        }
+                    }
+
+                    // Clase Apartado
+                    class Apartado {
+                        constructor(apartado) {
+                            this.apartado = apartado;
+                            this.puntos = null;
+                            this.sig = null;
+                        }
+                    }
+
+                    // Clase Agenda
+                    class Agenda {
+                        constructor() {
+                            this.participantes = null;
+                            this.apartados = null;
+                        }
+
+                        agregarParticipante(nombre, apellido1, apellido2) {
+                            let participante = new Participante(nombre, apellido1, apellido2);
+                            if (this.participantes === null) {
+                                this.participantes = participante;
+                            } else {
+                                let current = this.participantes;
+                                while (current.sig) {
+                                    current = current.sig;
+                                }
+                                current.sig = participante;
+                            }
+                        }
+
+                        agregarApartado(apartado) {
+                            let nuevoApartado = new Apartado(apartado);
+                            if (this.apartados === null) {
+                                this.apartados = nuevoApartado;
+                            } else {
+                                let current = this.apartados;
+                                while (current.sig) {
+                                    current = current.sig;
+                                }
+                                current.sig = nuevoApartado;
+                            }
+                        }
+
+                        agregarPunto(apartado, punto) {
+                            let current = this.apartados;
+                            while (current) {
+                                if (current.apartado === apartado) {
+                                    let nuevoPunto = new Punto(punto);
+                                    if (current.puntos === null) {
+                                        current.puntos = nuevoPunto;
+                                    } else {
+                                        let puntoActual = current.puntos;
+                                        while (puntoActual.sig) {
+                                            puntoActual = puntoActual.sig;
+                                        }
+                                        puntoActual.sig = nuevoPunto;
+                                    }
+                                    break;
+                                }
+                                current = current.sig;
+                            }
+                        }
+
+                        agregarDiscusion(apartado, punto, persona, discusion) {
+                            let current = this.apartados;
+                            while (current) {
+                                if (current.apartado === apartado) {
+                                    let puntoActual = current.puntos;
+                                    while (puntoActual) {
+                                        if (puntoActual.punto === punto) {
+                                            let nuevaDiscusion = new Discusion(persona, discusion);
+                                            if (puntoActual.discusiones === null) {
+                                                puntoActual.discusiones = nuevaDiscusion;
+                                            } else {
+                                                let discusionActual = puntoActual.discusiones;
+                                                while (discusionActual.sig) {
+                                                    discusionActual = discusionActual.sig;
+                                                }
+                                                discusionActual.sig = nuevaDiscusion;
+                                            }
+                                            break;
+                                        }
+                                        puntoActual = puntoActual.sig;
+                                    }
+                                    break;
+                                }
+                                current = current.sig;
+                            }
+                        }
+                    }
+                function solicitarNombreParticipante() {
+                    var nombre = prompt("Ingrese el nombre del participante:");
+                    if (nombre !== null) {
+                    // Aquí puedes realizar la lógica para agregar el participante a la agenda
+                    // por ejemplo, llamando al método correspondiente de la clase Agenda en Python a través de una comunicación entre el frontend y el backend.
+                    console.log("Nombre del participante ingresado: " + nombre);
+                    }
+                }
+                      
+                </script>
+            </head>
+            <body>
+                <h1>Funciones</h1>
+                <!-- Aquí puedes agregar el resto del contenido HTML -->
+                <button onclick="solicitarNombreParticipante()">Agregar Participante</button>
+            </body>
+            </html>"""
+
+    return html
+
+def mostrar_html_en_ventana(codigo_html):
+    webview.create_window("Función Recursiva", html=codigo_html)
+    webview.start()
+
+codigo_html_con_funcion_recursiva = generar_html_con_funcion_recursiva()
+mostrar_html_en_ventana(codigo_html_con_funcion_recursiva)
